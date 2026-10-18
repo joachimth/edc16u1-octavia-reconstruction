@@ -1,0 +1,4 @@
+# Ghidra scratch / OS cruft
+*.lock
+.DS_Store
+__pycache__/

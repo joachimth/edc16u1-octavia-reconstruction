@@ -1,0 +1,10 @@
+0x059800  sat_div16         calls=506
+0x05A16C  KF_lookup2d       calls=387
+0x0597AC  fp_helper_597ac   calls=69
+0x05A074  KL_lookup1d       calls=402
+0x059794  fp_mul_59794      calls=74
+0x05967C  sat_add16         calls=858
+0x0596FC  fp_helper_596fc   calls=72
+0x059718  fp_helper_59718   calls=98
+
+TOTAL interpolation call sites (1d+2d): 789
