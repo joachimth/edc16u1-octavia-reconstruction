@@ -1,0 +1,140 @@
+dj_map_cpu,kind,nx,ny,confidence,a2l_name,description_de
+0x8D235A,1D,4,,unique,ACCtl_tiACStrtDly_CUR,"Kennlinie: abhängig vom Klimadruck, die Startens der Klimaanlage zu bestimmen"
+0x8D23E4,1D,3,,unique,ACCtl_tWTHi_CUR,Geschwindigkeit / Temperatur Konverter - obere Hys. schwelle (Abschaltbedingung WASSERTEMPERATUR)
+0x8D2C9A,1D,32,,unique,AFSCD_dmLin2_CUR,LMM2 - Linearisierung M_Lt(proz) = f(U_LMM)
+0x8D25E0,1D,32,,unique,AFSCD_dmLin_CUR,Linearisierungkennline Sensorspannung in Luftmasse pro Zeit
+0x8D2C70,1D,6,,unique,AFSCD_mDiffMax_CUR,Max. zulaessige Luftmassendifferenz
+0x8D2BCA,1D,12,,unique,AFSCD_qAirmThrSRCHiActv_CUR,Mengenschwelle fuer SRC High der Luftmasse
+0x8D30A8,1D,25,,unique,AFSCD_tAirTempCorr2_CUR,Temperaturkorrektur aus Lufttemperatur 2
+0x8D2C04,1D,15,,unique,AFSCD_tAirTempCorr_CUR,Temperaturkorrektur aus Lufttemperatur
+0x8D3A8E,1D,2,,unique,AirCtl_CTCor1_CUR,Kennlinie für Mengenkorrekturwert ohne VE bei EGT-Status=Maske 2
+0x8D4430,1D,16,,unique,AirCtl_facATParAd_CUR,lufttemperaturabhängiger Faktor für Parameteradaption
+0x8D45E8,1D,8,,unique,AirCtl_facGovRgnRmpEGR_CUR,Kurve für die Rampenformung EGR für die Partikelfilter Regeneration
+0x8D460A,1D,8,,unique,AirCtl_facGovRgnRmpTVA_CUR,Kurve für die Rampenformung TVA für die Partikelfilter Regeneration
+0x8D3B08,1D,6,,unique,AirCtl_mAPCorAfterStrt_CUR,Atmosphärendruckkorrektur
+0x8D3B28,1D,4,,unique,AirCtl_mCor_CUR,Drehzahlkorrektur der Sollwertberechnung
+0x8D43D4,1D,16,,unique,AirCtl_qRpOilCorr_CUR,Einspritzmengen Korrektur für RME
+0x8D4368,1D,8,,unique,AirCtl_RevThres_CUR,Kühlmitteltemperaturabhängiger Schwellwert für den Umdrehungszähler seit Startabwurf
+0x8D5F64,1D,4,,unique,Alt_tiLdRespTi_CUR,Kennlinie zur Ermittlung der Lastreaktionszeit aus der Motor-temperatur
+0x8D6040,1D,6,,unique,AOHt_rOff_CUR,Kennlinie zur Berechnung der unteren Hystereseschwelle Generatorlast
+0x8D60A6,1D,6,,unique,AOHt_rOn_CUR,Kennlinie zur Berechnung der oberen Hystereseschwelle Generatorlast
+0x8D6188,1D,4,,unique,AOHt_tiEngOff_CUR,Lufttemperaturabhängige Ecomatic - Verzoegerungszeit
+0x8D61F0,1D,2,,unique,APPCD_rLinAPP1_CUR,Linerisierungs-Kennlinie APP1
+0x8D621E,1D,4,,unique,APPCD_rLinAPP2_CUR,Linerisierungs-Kennlinie APP2
+0x8D7ABC,1D,5,,unique,BattCD_uLin_CUR,Linearisierungskennlinie
+0x8D7AEC,1D,6,,unique,BIP_facFTCor_CUR,BIP-Kraftstofftemperatur-Korrekturkennlinie
+0x8D7B06,1D,10,,unique,BIP_tiBase_CUR,BIP-Grundkennlinie
+0x8D7F48,1D,2,,unique,BPSCD_pLin_CUR,Linearisierungskennlinie
+0x8D8172,1D,10,,unique,Clg_tiMaxDynTst_CUR,Kennlinie der maximal zulässigen Testzeit des dynamischen Plausibilitätstest
+0x8D8328,1D,6,,unique,CoEng_APdtrqSlpLimDwn_CUR,Luftdruck abhängige Kennlinie für fallende Rampensteigung
+0x8D8286,1D,5,,unique,CoEng_trqOffs_CUR,Kennlinie zur Berechnung des Offsets der Momentbegrenzung
+0x8D8454,1D,18,,unique,COTSCD_tLin_CUR,Linearisierungskennlinie für WTK-Sensor
+0x8D84E8,1D,2,,unique,CoVeh_nRgn_CUR,Kennlinie zur Generierung LL-Solldrehzahl bei Regeneration.
+0x8D8510,1D,25,,unique,CoVeh_trqLimSafe_CUR,Momentenbegrenzung aus Brettfunktion
+0x8D8B30,1D,6,,unique,CrCtl_facParCor_CUR,Korrekturkennlinie Triebstrang-Übersetzung für  Reglerparameter
+0x8D8DD6,1D,12,,unique,CrSCD_phiIncCor_CUR,Phasenkorrekturkennlinie des Inkrementsystems der Kurbelwelle
+0x8D8EE0,1D,25,,unique,CTSCD_tLinZoom_CUR,Linearisierungskennlinie für WTF-Sensor bei zoom-in
+0x8D8F4A,1D,25,,unique,CTSCD_tLin_CUR,Linearisierungskennlinie für WTF-Sensor
+0x8D937E,1D,5,,unique,CtTCtl_tClntCor3_CUR,Korrekturkennlinie: Öltemperatur
+0x8DD196,1D,8,,unique,EGSys_cndHtEG_CUR,Wärmeleitfähigkeit Abgas (nicht applizierbar)
+0x8DD318,1D,8,,unique,EGSys_facAirMass_CUR,Kennlinie zur Luftmassenabhängigen Temperaturkorrektur
+0x8DD714,1D,8,,unique,EGSys_facTempClg_CUR,Abkühlkennlinie abgasführende Bauteile
+0x8DD644,1D,8,,unique,EGSys_facTempCmb_CUR,Temperaturabhängiger Faktor zur Korrektur der im Oxidationskatalysator abreagierenden Kraftstoffmasse
+0x8DD736,1D,8,,unique,EGSys_facTimeClg_CUR,inverse Abkühlkennlinie Motor
+0x8DD860,1D,8,,unique,EGSys_NuTubeEnv_CUR,Nusselt-Zahl Abgasrohr-Aussenumströmung (nicht applizierbar)
+0x8DD882,1D,8,,unique,EGSys_NuTube_CUR,Nusselt-Zahl für Abgasrohrdurchströmung (nicht applizierbar)
+0x8DD82A,1D,8,,unique,EGSys_rTempAdbt_CUR,Kennlinie für die adiabatische Zustandänderung der Temperatur (nicht applizierbar)
+0x8DDAB6,1D,25,,unique,EngM_trqFrcMin_CUR,Kennlinie für die Berechnung des minimum Reibmoments
+0x8DEA58,1D,4,,unique,FanCtl_factARBaseCor_CUR,Korrekturkurve der Nachlaufzeit
+0x8DEEA2,1D,4,,unique,FanCtl_tARThres_CUR,Abschalttemperaturschwelle während der 2. Nachlaufphase
+0x8DF2C6,1D,8,,unique,FanCtl_tiAROilCor_CUR,3. Lüfternachlaufzeit der 1. Phase
+0x8DF470,1D,2,,unique,FlMng_dSmokeMapNr_CUR,Auswahl Kennfeld zur Rauchbegrenzung aus Motortemperatur
+0x8DF47A,1D,12,,unique,FlMng_facCorAirTemp_CUR,Lufttemperaturkorrektur für PWG abhängige Rauchbegrenzung
+0x8DF4AC,1D,12,,unique,FlMng_facCorAP_CUR,Atmosphärendruckkorrektur für PWG abhängige Rauchbegrenzung
+0x8DF4DE,1D,12,,unique,FlMng_facCorEngTemp_CUR,Motortemperaturkorrektur für PWG abhängige Rauchbegrenzung
+0x8DF548,1D,6,,unique,FlMng_facLmbdSmkSOE_CUR,Korrekturfaktor aufgrund Saugrohrdruck
+0x8DFCAC,1D,12,,unique,FlMng_rLmbdPartLd_CUR,Kennlinie für PWG abhängige Rauchbegrenzung
+0x8E0290,1D,3,,unique,FlMng_rLmbdSmkLimNr_CUR,Kennlinie zur Interpolation zwischen den Kennfeldern FlMng_rLmbdSmkLim0-2
+0x8E0476,1D,2,,unique,FlSys_rhoFl_CUR,temperaturabhängige Kraftstoffdichte
+0x8E0520,1D,8,,unique,FMA_facAirSwtOff_CUR,Kennlinie des ansauglufttemperaturabhängigen Abschaltfaktors der FMA
+0x8E0542,1D,8,,unique,FMA_facEngSwtOff_CUR,Kennlinie des motortemperaturabhängigen Abschaltfaktors der FMA
+0x8E0564,1D,8,,unique,FMA_facFlSwtOff_CUR,Kennlinie des kraftstofftemperaturabhängigen Abschaltfaktors der FMA
+0x8E0F38,1D,18,,unique,FTSCD_tLin_CUR,Linearisierungskennlinie der Kraftstoffstemperatur
+0x8E1064,1D,11,,unique,Gearbx_trqMoveOFF_CUR,Anfahrkennlinie EGS Eingriff
+0x8E19A0,1D,18,,unique,IATSCD_tLin_CUR,Linearisierungskennlinie für LTF-Sensor
+0x8E1AC0,1D,2,,unique,IndSys_facAPCor_CUR,Atmosphärendruckkorrekturkennlinie zur Dralldeaktivierung
+0x8E1AD6,1D,2,,unique,IndSys_facWtTempCor_CUR,Kühlmitteltemperaturkorrekturkennlinie zur Dralldeaktivierung
+0x8E57D0,1D,10,,unique,InjCrv_facMI1EGTCor1_CUR,KTF-abhängiger Wichtungsfaktor 1 für Förderbeginnberechnung
+0x8E7B4E,1D,2,,unique,InjCrv_facPoI2LmbdWgh_CUR,Kennlinie für Interpolation Lambda-Sollwert Nacheinspritzung
+0x8E874E,1D,6,,unique,InjVlv_numMI1_CUR,Kurve zur Auswahl der Foerderdauerkennfelder fuer Haupteinspritzung
+0x8E9358,1D,2,,unique,InjVlv_numPiI1_CUR,Pumpenkennfeldauswahlkennlinie Voreinspritzung
+0x8E954A,1D,2,,unique,InjVlv_numPoI2_CUR,Kennfeld- Auswahlkennlinie für Nacheinspritzung
+0x8EB93E,1D,5,,unique,LIGov_nRev_CUR,Umdrehungen nach Start für Leerlaufanhebung mittels LIGov_nCltAirP_MAP
+0x8EBA12,1D,6,,unique,LIGov_nTemp2_CUR,2.Kennlinie für Wassertemperaturabhängige Leerlauferhöhung
+0x8EB486,1D,7,,unique,LIGov_trqInitI_CUR,Kennlinie zur Initialisierung des Integrators
+0x8EBC84,1D,16,,unique,LSUCD_tRi_CUR,Kennlinie zur Umrechnung des Innenwiderstands auf Äquivalenztemperatur
+0x8EBEE6,1D,5,,unique,OTSCD_tFlCnsmpCor_CUR,Kennlinie zur Korrektur des Öltemperaturersatzwerts aus der verbrauchten Kraftstoffmenge
+0x8EBEFC,1D,5,,unique,OTSCD_tIATSCor_CUR,Kennlinie zur Korrektur des Öltemperaturersatzwerts aus IATS
+0x8EBF18,1D,13,,unique,OTSCD_tOil_CUR,Kennlinie für die Öltemperatur über die Öltemperaturzeit
+0x8D145A,1D,25,,unique,OvRMon_qLimEnh_CUR,erweiterte Schubkennlinie für Schubüberwachung (Mengenbasierend)
+0x8D1418,1D,16,,unique,OvRMon_tiLimET_CUR,Zulässige mittlere momentwirksame Ansteuerdauer in der Schubüberwachung
+0x8EEDAC,1D,10,,unique,PCR_pBGDevMax_CUR,"maximale Regelabweichung, abhängig von Wasser- der Öltemperatur"
+0x8EE8C0,1D,5,,unique,PCR_qMinBPGovFlt_CUR,Minimale Einspritzmenge zur Aktivierung der Ladergeräuschunterdrückung
+0x8EE8F4,1D,10,,unique,PCR_qRgtOff_CUR,Mengenkennlinie für Reglerabschaltschwelle in Abhängigkeit von der Drehzahl
+0x8EF448,1D,2,,unique,PFlt_facSotSimLmbd_CUR,Kennlinie für Gewichtung des Beladungsgfaktors für Entladung mit einem lambdaabh Faktor[-]
+0x8EF458,1D,2,,unique,PFlt_facSotSim_CUR,Berechnung des Summanden im Beladungszähler
+0x8EFC94,1D,8,,unique,PFlt_rSotSim_CUR,Berechnung des Subtrahenden im Beladungszähler
+0x8F0466,1D,25,,unique,Prp_trqThresEng_CUR,Schwellwert-Kennlinie zur Unterscheidung zwischen Zug- und Schubbetrieb
+0x8F09FC,1D,2,,unique,StSysCtl_tiThresEngT_CUR,motortemperaturabhängige Maximalzeit
+0x8F1030,1D,10,,unique,SvLpCD_lFillLvl_CUR,Kennlinie für die Berechnung der Füllstände von der Füllstandszeit
+0x8F1200,1D,3,,unique,T15CD_uLin_CUR,Kennlinie für Linearisierung des Rohwerts der Klemme 15
+0x8F16C4,1D,25,,unique,TVACD_rCnv_CUR,Kennlinie zur konvertierung von Öffnungsgrad in Tastverhältnis
+0x8D1A02,1D,6,,amb4,AccPed_stGearSel_CUR,"Auswahl der _MAPs AccPed_trqEng#_MAP, #={0,...,5} zur Interpolation zwischen den Gaengen"
+0x8D25B4,1D,2,,amb14,AddPCD_stTnkLvlLin_CUR,Linearisierungskennlinie des Additivtankinhaltes
+0x8D3180,1D,8,,amb6,AirCtl_facBPAHold_CUR,drehzahlabhängiger Korrekturfaktor der maximalen Zeit der LDR-Abschaltung
+0x8D3250,1D,2,,amb18,AirCtl_facCtlRgn1_CUR,Kurve für die Berechnung der Steuergröße im Regenerationsbetrieb 1
+0x8D31DC,1D,8,,amb2,AirCtl_mAirCBVHysHi_CUR,obere drehzahlabhängige Luftmassenschwellwertkennlinie für EGR Kühler Bypass
+0x8D462C,1D,10,,amb2,AirCtl_qGovOff_CUR,Kennlinie für untere Schwelle der Abschalthysterese
+0x8D4680,1D,10,,amb4,AirCtl_qGovRgn1Off_CUR,Kennlinie für untere Schwelle der Abschalthysterese bei Regenerationsbetrieb 1
+0x8D51D0,1D,20,,amb2,AirCtl_qHigh1_CUR,Kennlinie für obere Hysteresegrenze für Abschaltung bei großer Einspritzmenge und EGT-Status gleich der Maske
+0x8D2140,1D,8,,amb2,AirCtl_tiBPAHold_CUR,maximale Zeit der LDR-Abschaltung
+0x8D53A4,1D,10,,amb2,AirCtl_tiCoStrt_CUR,"Kennlinie für Zeit, in der die Regelung nach Startabwurf abgeschaltet bleibt"
+0x8D196E,1D,2,,amb5,AltCD_rLoadLin_CUR,Kennlinie zur Umrechnung von % TV in % Last
+0x8D6294,1D,3,,amb2,APPCD_uLowIdlSwtLin_CUR,Leergasschalter Linearisierung
+0x8D64AA,1D,2,,amb7,ASDdc_dActGearFac_CUR,Kennlinie mit Faktoren für Turbinendrehzahlberechung
+0x8D696E,1D,6,,amb2,ASDdc_stActGear_CUR,Kennlinie zur Auswahl eines Kennfeldes vom Kennraum für das Initialisierungsmoment des I-Reglers bei positiven Lastschlag
+0x8D7418,1D,8,,amb3,ASDrf_trqPullPos_CUR,pos. Offset auf Verlustmoment bei pos. Lastwechsel
+0x8D1522,1D,2,,amb2,Batt_facCor_CUR,Kennlinie für Batteriespannungskorrektur
+0x8EE9DE,1D,21,,amb2,BPACD_rCnv_CUR,Kennlinie zur konvertierung von Öffnungsgrad in Tastverhältnis
+0x8D806E,1D,12,,amb2,CaSCD_facPlausHigh_CUR,Obere Grenze der Plausibilitätsprüfung des Phasengebersignals
+0x8D80FA,1D,5,,amb2,CaSCD_rSeg2SegMax_CUR,"max Wert für Phasensignalverhältnis im Backup-Mode, Verhältnis = T[i-1] / T[i]"
+0x8D4732,1D,2,,amb16,CoEng_trqLimBit_CUR,Kennfeld zur Begrenzungsmomentermittlung bei Bi-Turbo-Fehler in Abhängigkeit von der Drehzahl
+0x8D82C0,1D,6,,amb2,CoEng_trqLimErr_CUR,Kennlinie für das Begrenzungsmoment bei Systemfehlern
+0x8D864E,1D,8,,amb6,CrCtl_aAcc_CUR,Kennlinie Sollbeschleunigung für Accelerate
+0x8D8E08,1D,10,,amb4,CrSCD_facGapPlausHigh_CUR,Verhältnis zur Bestimmung der oberen Grenze des Fensters zur Lückenplausibilisierung des Inkrementsignals
+0x8D93C0,1D,4,,amb2,CtTCtl_tClntCor6_CUR,Korrekturkennlinie: gestufte Kühlleistungsanhebung vom Getriebesteuergerät
+0x8DDA34,1D,12,,amb2,EngM_rNOnOffGL_CUR,Drehzahlabhängige Lagersteuerung (Getriebelager)
+0x8DE82A,1D,8,,amb2,FanCtl_dcycFan1_CUR,Kennlinie: Ermittlung des Ansteuerwertes für Lüfter 1
+0x8DEA6A,1D,4,,amb2,FanCtl_factBattCorr1_CUR,Kennlinie für Batteriekorrektur Lüfter 1
+0x8DF562,1D,7,,amb2,FlMng_FullLdRglIKi_CUR,Drehzahlabhängige Ki-Parameter der Vollastregelung
+0x8E11CC,1D,15,,amb7,Gearbx_trqMaxGear1_CUR,Begrenzungsmoment für ersten Gang
+0x8E1A3E,1D,5,,amb4,IFCtl_tAirHysHi_CUR,Obere Fahrgeschwindigkeitsabhängige Hystereseschwelle für die Lüftersteuerung über  die Ladelufttemperatur
+0x8E1F2C,1D,10,,amb2,IndSys_pDiffHigh_CUR,Kennlinie zur Berechnung der oberen Schwelle zur Erkennung des normalen Luftdrucks im Ansaugkrümmer
+0x8E5748,1D,10,,amb5,InjCrv_dRevMI1EGT1_CUR,Anzahl 1 der Kw-Umdrehung bis Abbau der Förderbeginnkorrektur
+0x8E57C6,1D,2,,amb2,InjCrv_dRevMI1EGT4_CUR,Anzahl 4 der KW-Umdrehung bis Abbau der Förderbeginnkorrektur
+0x8E646C,1D,10,,amb6,InjCrv_qMI1Off_CUR,Ausschaltkennlinie für Überprüfung der Haupteinspritzmenge
+0x8E7B58,1D,8,,amb6,InjCrv_qPoI2LmbdRgn1Off_CUR,Ausschaltschwelle 1 für Lambda-Regelung Nacheinspritzung
+0x8E7C24,1D,2,,amb2,InjCrv_qPoI2LmbdRgn4Off_CUR,Ausschaltschwelle 4 für Lambda-Regelung Nacheinspritzung
+0x8EB3E0,1D,4,,amb2,LIGov_nSetpointDriveAway_CUR,LL-Solldrehzahl Fahrzeug fährt (V > 0) (Atmosphärendruck -abhängige)
+0x8EB9FE,1D,2,,amb2,LIGov_nTemp2Rgn1_CUR,2.Kennlinie bei Regenerationsstufe 1 für Wassertemperaturabhängige Leerlauferhöhung
+0x8EBC20,1D,8,,amb2,LSUCD_facPresCompLean_CUR,Kennlinie für Druckkorrekturfaktor bei magerem Luft-Kraftstoff-Gemisch
+0x8E0C9C,1D,10,,amb5,PCR_facTAltCorr2_CUR,Korrekturfaktor Lufttemperatur für Luftmassenkorrektur zweites Luftsystem
+0x8EC252,1D,2,,amb2,PCR_nBalGovDevMax_CUR,Maximal erlaubte Regelabweichung beim Laderabgleich
+0x8EE8D6,1D,2,,amb3,PCR_qRgtOff1_CUR,Mengenkennlinie für Reglerabschaltschwelle in Abhängigkeit von der Drehzahl bei EGT-Status gleich Regenerationsmaske 1
+0x8EE95A,1D,2,,amb3,PCR_qRgtOn1_CUR,Mengenkennlinie für Reglereinschaltschwelle in Abhängigkeit von der Drehzahl bei EGT-Status gleich Regenerationsmaske 1
+0x8EF430,1D,2,,amb2,PFlt_facFltEmp_CUR,zur Interpolation des simulierten Differenzdrucks für leeres Filter [-]
+0x8EEF9E,1D,5,,amb5,PFlt_rSotSimPresLow1_CUR,stellt die temperaturabhängige untere Hysteresenschwelle bei Stufe 1 [s] zur Verfügung.
+0x8EF106,1D,5,,amb4,PFlt_trqInrRgnLowMax1_CUR,Kennlinie für untere Grenze 1 der Regenerations-Unterbrechung wegen hohem geforderten Moment
+0x8F0520,1D,25,,amb2,PrpCtl_trqAWDLim_CUR,Kennlinie zur drehzahlabhängigen Momentenbegrenzung durch Allrad1
+0x8EFF56,1D,16,,amb2,Prp_rEngLow_CUR,inverse Fahrverhaltenkennlinie für CC/ACC beschleunigt und AWD ist aktiv
+0x8F0908,1D,5,,amb2,StSys_nThrestEng_CUR,Zweimassenschwungrad Kennlinie für Drehzahlschwelle
