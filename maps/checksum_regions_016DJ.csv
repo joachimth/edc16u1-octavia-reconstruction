@@ -1,0 +1,4 @@
+region,start_cpu,end_cpu,checksum_word_file_offset,sum,status
+1 (ASW/code),0x800000,0x87FFFF,0x7FFFC,0xD01FE500,verified
+2 (data block 2),0x880000,0x8CFFFF,0xCFFFC,0xD01FE500,verified
+3 (calibration),0x8D0000,0x8FDFFF,0xFDFFC,0xD01FE500,verified
