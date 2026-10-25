@@ -242,6 +242,14 @@ td.mono,.mono{font-family:var(--mono);font-size:12px}
     </div>
     <div class="mapmeta" id="emSel">Klik en blok …</div>
   </div>
+  <div class="panel">
+    <h3>Kør modellen — open-loop, fysiske enheder</h3>
+    <p class="sub">Sensor-input til venstre; brændstofvejen regnes trin for trin med ECU'ens egen interpolation på de ægte kort. Hver linje er mærket <span class="tag int">målt</span> (ægte skalering fra firmware/A2L), <span class="tag d1">antaget</span> (typisk Bosch-skalering — erstattes 1:1 hvis <code>016AA</code>-DAMOS'en låses op) eller <span class="tag d2">struktur</span>. Antagede skaleringer er plausibilitets-tjekket, ikke bekræftet.</p>
+    <div class="two">
+      <div class="panel" style="margin-top:0"><h3>Sensor-input</h3><div id="emSensors"></div></div>
+      <div class="panel" style="margin-top:0"><h3>Beregnet brændstofvej</h3><div id="emResults"></div></div>
+    </div>
+  </div>
   <div class="note">Hvad der er <b>målt fra firmwaren</b>: alle kort-data, interpolations-matematikken, checksum-skemaet, hukommelses-layoutet og de 45 læsefunktioners input/output-variable. Hvad der er <b>generel dokumentation</b>: selve rækkefølgen af blokke herover (den kanoniske torque-struktur). Hvad der <b>ikke kan genskabes fra et statisk image</b>: realtids-skemalægningen, sensor- og motor-modellerne, de lukkede regulatorsløjfer — og output-skaleringen for de unavngivne kernekort, så en enheds-konsistent slutmængde i mg/hub kan ikke beregnes uden at gætte.</div>
   <div class="panel"><h3>Hvad en fuld, cyklus-nøjagtig simulering yderligere ville kræve</h3><div id="emGap"></div></div>
 </section>
@@ -913,7 +921,74 @@ if(document.querySelector('#'+startTab+'.active')){const _l=_lazy[startTab];if(_
       +items.map(([a,b])=>`<tr><td><b>${a}</b></td><td style="white-space:normal">${b}</td></tr>`).join('')+'</tbody>';
     tb.appendChild(tbl);g.appendChild(tb);
   })();
-  _lazy.enginemodel=()=>{setTimeout(build,40);};
+  /* ---- runnable open-loop fuel-path model ---- */
+  const physVal=(m,raw)=>(m&&m.factor!=null&&isFinite(m.factor))?raw*m.factor+(m.offset||0):raw;
+  const Q_LSB=0.01;              // ASSUMED: core quantity maps → mg/hub per LSB (as the named qLim maps)
+  const S={rpm:2000,pedal:40,tc:85,ta:25,vb:13.5};
+  function emSlider(key,label,min,max,step,unit){
+    const w=el('div');w.style.margin='12px 0';
+    w.innerHTML=`<div class="pill">${label}: <b id="em_${key}">${S[key]}</b> ${unit}</div>`;
+    const inp=el('input');inp.type='range';inp.min=min;inp.max=max;inp.step=step;inp.value=S[key];inp.style.width='100%';
+    inp.oninput=()=>{S[key]=+inp.value;$('#em_'+key).textContent=inp.value;emRun();};
+    w.appendChild(inp);return w;
+  }
+  function emSensorsBuild(){
+    const box=$('#emSensors');if(!box||box.dataset.built)return;box.dataset.built='1';
+    box.appendChild(emSlider('rpm','Omdrejninger',0,5000,10,'rpm'));
+    box.appendChild(emSlider('pedal','Pedal',0,100,1,'%'));
+    box.appendChild(emSlider('tc','Kølevæske-temp',-30,120,1,'°C'));
+    box.appendChild(emSlider('ta','Indsugnings-temp',-20,90,1,'°C'));
+    box.appendChild(emSlider('vb','Batterispænding',9,15,0.1,'V'));
+  }
+  const mapTo=(v,vmin,vmax,ax)=>{const a0=ax[0],a1=ax[ax.length-1];return a0+(v-vmin)/(vmax-vmin||1)*(a1-a0);};
+  const TAG={m:'<span class="tag int">målt</span>',a:'<span class="tag d1">antaget</span>',s:'<span class="tag d2">struktur</span>'};
+  function emRun(){
+    const res=$('#emResults');if(!res)return;
+    const g=a=>byAddr[a];
+    const base=g('0x8E8580'),ovr=g('0x8D145A'),rail=g('0x8E885C'),
+          numM=g('0x8E874E'),numP=g('0x8E9358'),numO=g('0x8E954A'),
+          bip=g('0x8D7B06'),fFT=g('0x8D7AEC'),fEng=g('0x8DF4DE'),fAir=g('0x8DF47A'),fAP=g('0x8DF4AC');
+    // 1) base quantity (rpm × pedal→Y)  [assumed output scaling]
+    const qbase_raw=kf2d(base.axisX,base.axisY,base.grid,S.rpm,mapTo(S.pedal,0,100,base.axisY)).val;
+    const qbase=qbase_raw*Q_LSB;
+    // 2) corrections (real factors; flat ≈1.0 in this calibration)
+    const cEng=physVal(fEng,kl1d(fEng.axisX,fEng.series,mapTo(S.tc,-30,120,fEng.axisX)));
+    const cAir=physVal(fAir,kl1d(fAir.axisX,fAir.series,mapTo(S.ta,-20,90,fAir.axisX)));
+    const cAP =physVal(fAP ,kl1d(fAP.axisX ,fAP.series ,fAP.axisX[Math.floor(fAP.axisX.length/2)]));
+    const corr=cEng*cAir*cAP, qcorr=qbase*corr;
+    // 3) overrun limit (real mg/hub) — a COASTING cutoff, only active at low pedal
+    const ovrLim=physVal(ovr,kl1d(ovr.axisX,ovr.series,S.rpm));
+    const overrunActive=S.pedal<5;
+    // 4) final quantity: driver demand, gated by overrun only during coasting
+    const qfin=overrunActive?Math.min(qcorr,ovrLim):qcorr;
+    const qfin_raw=qfin/Q_LSB;
+    // 5) rail pressure setpoint (rpm × q→Y) — raw only; this core map has no verified output scaling
+    const rail_raw=kf2d(rail.axisX,rail.axisY,rail.grid,S.rpm,qfin_raw).val;
+    // 6) injection pattern (real counts; axis input assumed)
+    const nMain=Math.round(physVal(numM,kl1d(numM.axisX,numM.series,qfin_raw)));
+    const nPil =Math.round(physVal(numP,kl1d(numP.axisX,numP.series,qfin_raw)));
+    const nPost=Math.round(physVal(numO,kl1d(numO.axisX,numO.series,qfin_raw)));
+    // 7) injector base time (real µs; axis meaning uncertain) × fuel-temp & battery correction
+    const tiBase=physVal(bip,kl1d(bip.axisX,bip.series,mapTo(qfin,0,70,bip.axisX)));
+    const cFT=physVal(fFT,kl1d(fFT.axisX,fFT.series,mapTo(S.ta,-20,90,fFT.axisX)));
+    const vbCor=1+(13.5-S.vb)*0.06;  // ASSUMED: ~6%/V injector dead-time comp (typical)
+    const tiTot=tiBase*cFT*vbCor;
+    const row=(a,lab,val,tag)=>`<tr><td>${a}</td><td style="white-space:normal">${lab}</td><td class="mono" style="text-align:right"><b>${val}</b></td><td>${tag}</td></tr>`;
+    const n1=x=>x.toLocaleString('da-DK',{maximumFractionDigits:1});
+    const n2=x=>x.toLocaleString('da-DK',{maximumFractionDigits:2});
+    res.innerHTML='<div class="tablewrap"><table><thead><tr><th>Kort</th><th>Trin</th><th style="text-align:right">Værdi</th><th>Kilde</th></tr></thead><tbody>'
+      +row('0x8E8580','Grundmængde (omdr. × efterspørgsel*)',n1(qbase)+' mg/hub',TAG.a)
+      +row('0x8DF4DE/47A/4AC','Temp/luft/tryk-korrektion',(corr===1?'×1,00 (neutral)':'×'+n2(corr)),TAG.m)
+      +row('—','Korrigeret mængde',n1(qcorr)+' mg/hub',TAG.s)
+      +row('0x8D145A','Overrun-/skubbegrænse (omdr.) — '+(overrunActive?'<b>aktiv (skub)</b>':'inaktiv ved denne pedal'),n1(ovrLim)+' mg/hub',TAG.m)
+      +row('—','<b>Slutmængde '+(overrunActive?'= min(demand, skubgrænse)':'= korrigeret demand')+'</b>','<b>'+n1(qfin)+' mg/hub</b>',TAG.s)
+      +row('0x8E885C','Rail-tryk setpunkt (omdr. × mængde)',fmt(rail_raw)+' rå',TAG.s)
+      +row('0x8E874E/9358/954A','Indsprøjtningsmønster (for/hoved/efter)',nPil+' / '+nMain+' / '+nPost,TAG.m)
+      +row('0x8D7B06','Indsprøjtnings-basistid BIP',Math.round(tiTot)+' µs',TAG.m)
+      +'</tbody></table></div>'
+      +'<div class="foot">Antagne skaleringer: mængde 0,01 mg/hub/LSB (som de navngivne qLim-kort) · batteri-komp ~6 %/V. Rail-kortet har ingen bekræftet output-skalering, så det vises i rå u16. Akse-input hvor et kort ikke har omdr./pedal direkte (pedal→Y, mængde→BIP-akse) er lineært afbildet. Overrun-grænsen er en skub-afbrydelse og gates kun ved lav pedal. Overrun-grænsen og korrektionsfaktorerne bruger ægte A2L-skalering. <b>*</b> Efterspørgsels-aksens rolle på grundmængde-kernekortet er ikke bekræftet, så grundmængden ved lav pedal kan se forkert ud — det er antagelsen, ikke ECU-matematikken.</div>';
+  }
+  _lazy.enginemodel=()=>{emSensorsBuild();emRun();setTimeout(build,40);};
   window.addEventListener('resize',()=>{if(emChart&&$('#enginemodel').classList.contains('active'))setTimeout(build,120);});
 })();
 </script>
