@@ -99,6 +99,7 @@ td.mono,.mono{font-family:var(--mono);font-size:12px}
     <button class="tab" data-tab="flow">Signalflow</button>
     <button class="tab" data-tab="sim">Simulator</button>
     <button class="tab" data-tab="chainsim">Kæde-sim</button>
+    <button class="tab" data-tab="enginemodel">Motormodel</button>
     <button class="tab" data-tab="code">Kode</button>
     <button class="tab" data-tab="corr">Korrespondance</button>
     <button class="tab" data-tab="catalogs">Kataloger</button>
@@ -226,6 +227,23 @@ td.mono,.mono{font-family:var(--mono);font-size:12px}
     <span class="pill">Slut-output nederst</span>
   </div>
   <div id="chainStages"></div>
+</section>
+
+<section id="enginemodel">
+  <h2>Motormodel — hele brændstofvejen, input → output</h2>
+  <p class="sub">Den kanoniske EDC16 commonrail-diesel-signalvej fra sensor-input til aktuator-output, lagt oven på de <b>ægte</b> Octavia-kort. Strukturen (rækkefølgen af blokke) er veldokumenteret diesel-ECU-viden; hver blok er mærket med det kort i firmwaren der udfylder dens rolle, og hvor sikkert vi kender den rolle. Klik en blok med et kort for at åbne det i simulatoren.</p>
+  <div class="panel">
+    <h3>Signalvej</h3>
+    <div id="emGraph" style="width:100%;height:540px"></div>
+    <div class="legendrow">
+      <span style="color:var(--good)">● bekræftet kort — funktionelt navn fra A2L</span>
+      <span style="color:var(--acc2)">● kernekort i firmwaren — rolle ikke bekræftet</span>
+      <span style="color:var(--mut)">● modelleret / intet enkelt-kort i datasættet</span>
+    </div>
+    <div class="mapmeta" id="emSel">Klik en blok …</div>
+  </div>
+  <div class="note">Hvad der er <b>målt fra firmwaren</b>: alle kort-data, interpolations-matematikken, checksum-skemaet, hukommelses-layoutet og de 45 læsefunktioners input/output-variable. Hvad der er <b>generel dokumentation</b>: selve rækkefølgen af blokke herover (den kanoniske torque-struktur). Hvad der <b>ikke kan genskabes fra et statisk image</b>: realtids-skemalægningen, sensor- og motor-modellerne, de lukkede regulatorsløjfer — og output-skaleringen for de unavngivne kernekort, så en enheds-konsistent slutmængde i mg/hub kan ikke beregnes uden at gætte.</div>
+  <div class="panel"><h3>Hvad en fuld, cyklus-nøjagtig simulering yderligere ville kræve</h3><div id="emGap"></div></div>
 </section>
 
 <section id="code">
@@ -703,7 +721,14 @@ if(document.querySelector('#'+startTab+'.active')){const _l=_lazy[startTab];if(_
     kind:'2D',axisX:m.axisCols,axisY:m.axisRows,grid:m.grid,nx:m.cols,ny:m.rows,name:m.name}));
   const byUid=Object.fromEntries(pool.map(p=>[p.uid,p]));
   const seedUids=(D.chainSeed||[]).map(a=>'B:'+a).filter(u=>byUid[u]);
-  let sensors={A:2000,B:8000};
+  // Physically-labelled example through the real 016DJ maps (coupling is illustrative — see note above):
+  // rpm + efterspørgsel -> grundmængde (kernekort) ; rpm -> overrun-grænse (bekræftet) ; mængde -> BIP-indsprøjtningstid (bekræftet)
+  const djExample=[
+    {uid:'DJ:0x8E8580',xs:'A',ys:'B'},
+    {uid:'DJ:0x8D145A',xs:'A',ys:null},
+    {uid:'DJ:0x8D7B06',xs:'S0',ys:null}
+  ].filter(s=>byUid[s.uid]);
+  let sensors={A:2000,B:3000};
   let stages=[]; // {uid, xs, ys}
   const chartInstances=[];
 
@@ -712,7 +737,8 @@ if(document.querySelector('#'+startTab+'.active')){const _l=_lazy[startTab];if(_
     return {xs:i===0?'A':'S'+(i-1), ys:i===0?'B':'A'};
   }
   function seed(){
-    stages=seedUids.map((u,i)=>{const m=byUid[u];return Object.assign({uid:u},defaultSources(i,m));});
+    if(djExample.length){stages=djExample.map(s=>Object.assign({},s));}
+    else{stages=seedUids.map((u,i)=>{const m=byUid[u];return Object.assign({uid:u},defaultSources(i,m));});}
     if(!stages.length){const f=pool.find(p=>p.kind==='2D')||pool[0];if(f)stages=[Object.assign({uid:f.uid},defaultSources(0,f))];}
     render();
   }
@@ -801,6 +827,94 @@ if(document.querySelector('#'+startTab+'.active')){const _l=_lazy[startTab];if(_
   $('#resetChain').onclick=seed;
   // lazy build on first open
   _lazy.chainsim=()=>{if(!stages.length){seed();}else{setTimeout(()=>chartInstances.forEach(c=>c&&c.resize()),60);}};
+})();
+
+/* ===== Engine model: canonical EDC16 diesel fuel-path, over the real maps ===== */
+(function(){
+  const have=new Set(D.maps.map(m=>m.addr));
+  const byAddr=Object.fromEntries(D.maps.map(m=>[m.addr,m]));
+  // conf: ok = verified A2L name · core = real firmware map, role unverified · model = no single map
+  // [id,label,colFrac,rowFrac,addr,conf,note]
+  const N=[
+    ['in_ped','Pedal (%)',0.05,0.14,null,'model','Kører-ønske'],
+    ['in_rpm','Omdr. (rpm)',0.05,0.32,null,'model','Krumtap-sensor'],
+    ['in_tcool','Kølev.-temp',0.05,0.50,null,'model','Sensor'],
+    ['in_tair','Indsug.-temp',0.05,0.66,null,'model','Sensor'],
+    ['in_maf','Luftmasse',0.05,0.82,null,'model','HFM / MAF'],
+    ['in_batt','Batterispænding',0.05,0.95,null,'model','Klemme 30'],
+    ['base_q','Grundmængde\n(rpm × ønske)',0.24,0.23,'0x8E8580','core','Kernekort — rolle ikke bekræftet'],
+    ['cor_tc','Kølev.-korr.',0.42,0.42,'0x8DF4DE','ok','FlMng_facCorEngTemp_CUR (≈1,0 i denne kal.)'],
+    ['cor_ta','Indsug.-korr.',0.42,0.57,'0x8DF47A','ok','FlMng_facCorAirTemp_CUR (≈1,0)'],
+    ['cor_ap','Omgiv.tryk-korr.',0.42,0.72,'0x8DF4AC','ok','FlMng_facCorAP_CUR (≈1,0)'],
+    ['lim_smk','Røg-/luftgrænse',0.60,0.18,'0x8E8768','core','Kernekort — rolle ikke bekræftet'],
+    ['lim_ovr','Overrun-grænse',0.60,0.34,'0x8D145A','ok','OvRMon_qLimEnh_CUR — 4,35..50 mg/hub'],
+    ['lim_trq','Maks-moment',0.60,0.50,null,'model','Fuldlast-kurve ikke navngivet'],
+    ['q_final','Slutmængde\n(min)',0.74,0.42,null,'model','min(korrigeret grund, grænser)'],
+    ['inj_pat','Indsprøjtnings-\nmønster',0.92,0.14,'0x8E874E','ok','InjVlv_numMI1/PiI1/PoI2 — for/hoved/efter'],
+    ['bip','Indsprøjtningstid\nBIP (µs)',0.92,0.34,'0x8D7B06','ok','BIP_tiBase_CUR × fuel/batt-korr.'],
+    ['rail','Rail-tryk\nsetpunkt',0.92,0.54,'0x8E885C','core','Kernekort — rolle ikke bekræftet'],
+    ['soi','Indsprøjtnings-\nstart (°KV)',0.92,0.72,null,'model','Timing-kort ikke navngivet'],
+    ['egr','EGR / turbo',0.92,0.90,null,'model','Luftvej-aktuatorer'],
+  ];
+  const E=[
+    ['in_rpm','base_q'],['in_ped','base_q'],
+    ['base_q','cor_tc'],['cor_tc','cor_ta'],['cor_ta','cor_ap'],['cor_ap','q_final'],
+    ['in_tcool','cor_tc'],['in_tair','cor_ta'],
+    ['in_maf','lim_smk'],['in_rpm','lim_ovr'],['in_rpm','lim_trq'],
+    ['lim_smk','q_final'],['lim_ovr','q_final'],['lim_trq','q_final'],
+    ['q_final','inj_pat'],['q_final','bip'],['q_final','rail'],['q_final','soi'],['q_final','egr'],
+    ['in_batt','bip'],
+  ];
+  const COL={ok:'--good',core:'--acc2',model:'--mut'};
+  let emChart=null;
+  function build(){
+    const dom=$('#emGraph');if(!dom)return;const t=theme();
+    const r=getComputedStyle(document.documentElement);
+    const col=c=>r.getPropertyValue(c).trim();
+    if(emChart)emChart.dispose();emChart=echarts.init(dom);
+    const W=emChart.getWidth(),H=emChart.getHeight();
+    const nodes=N.map(([id,label,cx,cy,addr,conf,note])=>({
+      id,name:id,value:label,x:cx*W,y:cy*H,fixed:true,
+      symbol:'roundRect',symbolSize:conf==='model'?[92,34]:[100,40],
+      itemStyle:{color:'transparent',borderColor:col(COL[conf]),borderWidth:2},
+      label:{show:true,formatter:label,color:t.tx,fontSize:10,lineHeight:12,width:96,overflow:'break'},
+      _addr:addr,_conf:conf,_note:note,_clickable:!!(addr&&have.has(addr)),
+    }));
+    const nm=Object.fromEntries(nodes.map(n=>[n.id,n]));
+    const links=E.map(([s,t2])=>({source:s,target:t2,
+      lineStyle:{color:col('--line'),width:1.2,curveness:0.08,opacity:0.8},
+      symbol:['none','arrow'],symbolSize:[0,6]}));
+    emChart.setOption({
+      animation:false,
+      tooltip:{trigger:'item',formatter:p=>p.dataType==='node'?(p.data.value.replace(/\n/g,' ')+'<br/>'+(p.data._addr?('<b>'+p.data._addr+'</b> — '):'')+p.data._note+(p.data._clickable?'<br/><span style=\"color:'+t.acc+'\">klik → simulator</span>':'')):''},
+      series:[{type:'graph',layout:'none',coordinateSystem:null,roam:false,
+        nodes,links,edgeSymbol:['none','arrow'],
+        emphasis:{focus:'adjacency',lineStyle:{width:2}},
+      }]});
+    emChart.off('click');
+    emChart.on('click',p=>{
+      if(p.dataType!=='node')return;const d=p.data;
+      $('#emSel').innerHTML = (d._addr?('<b>'+d._addr+'</b> · '):'')+d.value.replace(/\n/g,' ')+' — '+d._note
+        + (d._clickable?' · <span style="color:var(--acc)">åbner i simulator …</span>':(d._addr?' · <span style="color:var(--acc2)">kort uden for 124-kataloget</span>':''));
+      if(d._clickable){const sel=$('#simSel');if(sel){sel.value=d._addr;}activate('sim');setTimeout(()=>simLoad(d._addr),60);}
+    });
+  }
+  // gap explainer
+  (function(){const g=$('#emGap');if(!g)return;
+    const items=[
+      ['Realtids-skemalægning','Rækkefølge og frekvens som tasks kaldes i (10/20/100 ms-rastre). Ligger i OS/scheduler-tabeller, ikke i kalibrerings-kortene — kræver et bænk-trace at fastlægge.'],
+      ['Sensor-modeller','Transferfunktioner fra spænding/frekvens til fysisk størrelse (NTC-kurver, HFM-karakteristik). Delvist i akse-skaleringen, ikke fuldt genskabeligt statisk.'],
+      ['Motor-/plantemodel','Forbrændingen, luftvejen og krumtap-dynamikken der omsætter indsprøjtning til moment og omdrejninger — findes slet ikke i styreenheden.'],
+      ['Lukkede regulatorsløjfer','PID/governor-tilstand for tomgang, rail-tryk, EGR og ladetryk opdateres løbende fra feedback; startværdier og anti-windup kendes ikke uden kørsel.'],
+      ['Output-skalering for kernekort','De unavngivne 2D-kort mangler COMPU_METHOD, så rå u16 kan ikke oversættes til mg/hub, bar eller °KV uden at gætte.'],
+    ];
+    const tb=el('div','tablewrap');const tbl=el('table');
+    tbl.innerHTML='<thead><tr><th>Mangler</th><th>Hvorfor det ikke er i det statiske image</th></tr></thead><tbody>'
+      +items.map(([a,b])=>`<tr><td><b>${a}</b></td><td style="white-space:normal">${b}</td></tr>`).join('')+'</tbody>';
+    tb.appendChild(tbl);g.appendChild(tb);
+  })();
+  _lazy.enginemodel=()=>{setTimeout(build,40);};
+  window.addEventListener('resize',()=>{if(emChart&&$('#enginemodel').classList.contains('active'))setTimeout(build,120);});
 })();
 </script>
 </body>

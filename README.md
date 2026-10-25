@@ -23,6 +23,23 @@ used — all organized so the work is reproducible.
 - **Map catalogue**: **124 firmware-confirmed tables** (46 2-D + 78 1-D) with axes,
   derived from the real descriptor pointers — not a heuristic guess.
 - **Cross-reference**: 31 axis-identical maps between this file and the 016B sibling.
+- **Functional names via A2L axis-match**: **158** maps named reliably (40 of them inside
+  the 124-catalogue) by matching exact axis break-points against sibling-variant A2Ls
+  (EDC16U31 1.9 TDI PD) — validated by identical breakpoints, not guessed. Each named
+  map also carries its A2L `COMPU_METHOD` scaling (`physical = factor·raw + offset`),
+  so values show in real units (mg/hub, °C, Nm, µs, …). See `docs/NAMED_MAPS.md`.
+
+## Live dashboard
+An interactive dashboard (`index.html`, published via GitHub Pages) presents every table
+as a chart/heatmap and runs the ECU's own interpolation live:
+- **Simulator** — pick a map, drag the axis inputs; output is computed 1:1 with the
+  decompiled `KF_lookup2d`/`KL_lookup1d`, shown in physical units for named maps.
+- **Kæde-sim** — chain maps in series (seeded with a physical example: rpm + load →
+  injection quantity → injector time, plus the overrun limit).
+- **Motormodel** — the canonical EDC16 common-rail fuel path as an interactive block
+  diagram laid over the real maps; each block is tagged *verified name* / *core map,
+  role unverified* / *modelled*, and clicking a block opens that map in the simulator.
+  It is explicit about what a full cycle-accurate simulation would additionally require.
 
 ## Honest limits
 - **Per-map → exact reader**: only ~22 resolve statically. The rest reach their map
@@ -30,9 +47,12 @@ used — all organized so the work is reproducible.
   subsystem, so the map a call uses is only fixed at run time. Closing the last link
   needs a **bench/dynamic trace** of the running ECU (not available) or per-subsystem
   manual tracing. See `docs/PHASE1_ATTRIBUTION_STATUS.md`.
-- **Functional names**: no licensed A2L/DAMOS was available, and names do **not**
-  transfer reliably from the 016B sibling (its named maps were retuned, so axes
-  differ). `docs/FUNCTIONAL_READERS.md` gives the code-level facts instead of guesses.
+- **Functional names**: the exact-family **03G906016AA DAMOS** is still password-locked,
+  and names do **not** transfer by position from the 016B sibling (its maps were retuned).
+  Names here come only from **exact axis-signature matches** against sibling-variant A2Ls
+  (see above) — reliable for the matched maps, but the unnamed core 2-D maps (base
+  quantity, timing, rail pressure) have no verified role or output scaling.
+  `docs/FUNCTIONAL_READERS.md` gives the code-level facts; `docs/NAMED_MAPS.md` the names.
 
 ## Layout
 ```
