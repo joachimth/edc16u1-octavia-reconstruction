@@ -21,3 +21,12 @@ Names come from a sibling-variant A2L, matched by exact axis identity, so they a
 reliable for the matched maps. The exact-family **03G906016AA DAMOS** (still password-
 protected) would extend coverage further; more A2Ls in the collection (m85dk000, A3
 038906016H) can be run the same way to raise the count.
+
+## Physical scaling (units)
+`maps/named_016DJ_from_A2L.csv` now also carries the A2L `COMPU_METHOD` for each matched
+map, as three extra columns: **unit, factor, offset**. The raw u16 table value converts to
+a physical quantity with `physical = factor · raw + offset` (158/158 named maps resolved).
+Units seen include mg/hub, mg/Hub Luft, °C, %, Nm, ms, rpm, hPa, mV and dimensionless `[-]`.
+The dashboard **simulator** and **chain-sim** apply this live: for a named map the output is
+shown as the physical value with its unit, with the raw u16 in parentheses
+(e.g. `4.35 mg/hub (435 rå)`).
