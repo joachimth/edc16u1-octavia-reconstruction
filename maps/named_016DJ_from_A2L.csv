@@ -31,6 +31,7 @@ dj_map_cpu,kind,nx,ny,confidence,a2l_name,description_de
 0x8D4680,1D,10,,amb4,AirCtl_qGovRgn1Off_CUR,Kennlinie für untere Schwelle der Abschalthysterese bei Regenerationsbetrieb 1
 0x8D4732,1D,2,,amb16,CoEng_trqLimBit_CUR,Kennfeld zur Begrenzungsmomentermittlung bei Bi-Turbo-Fehler in Abhängigkeit von der Drehzahl
 0x8D51D0,1D,20,,amb2,AirCtl_qHigh1_CUR,Kennlinie für obere Hysteresegrenze für Abschaltung bei großer Einspritzmenge und EGT-Status gleich der Maske
+0x8D5274,1D,20,,unique,AirCtl_qLow_CUR,Kennlinie für untere Hysteresegrenze für Abschaltung bei großer Einspritzmenge
 0x8D53A4,1D,10,,amb2,AirCtl_tiCoStrt_CUR,"Kennlinie für Zeit, in der die Regelung nach Startabwurf abgeschaltet bleibt"
 0x8D5F64,1D,4,,unique,Alt_tiLdRespTi_CUR,Kennlinie zur Ermittlung der Lastreaktionszeit aus der Motor-temperatur
 0x8D6040,1D,6,,unique,AOHt_rOff_CUR,Kennlinie zur Berechnung der unteren Hystereseschwelle Generatorlast
@@ -85,6 +86,7 @@ dj_map_cpu,kind,nx,ny,confidence,a2l_name,description_de
 0x8DEA6A,1D,4,,amb2,FanCtl_factBattCorr1_CUR,Kennlinie für Batteriekorrektur Lüfter 1
 0x8DEEA2,1D,4,,unique,FanCtl_tARThres_CUR,Abschalttemperaturschwelle während der 2. Nachlaufphase
 0x8DF2C6,1D,8,,unique,FanCtl_tiAROilCor_CUR,3. Lüfternachlaufzeit der 1. Phase
+0x8DF3F2,1D,4,,unique,FBC_qGvrnThresMax_CUR,obere mengenabhängige Regelschwelle
 0x8DF470,1D,2,,unique,FlMng_dSmokeMapNr_CUR,Auswahl Kennfeld zur Rauchbegrenzung aus Motortemperatur
 0x8DF47A,1D,12,,unique,FlMng_facCorAirTemp_CUR,Lufttemperaturkorrektur für PWG abhängige Rauchbegrenzung
 0x8DF4AC,1D,12,,unique,FlMng_facCorAP_CUR,Atmosphärendruckkorrektur für PWG abhängige Rauchbegrenzung
@@ -115,6 +117,7 @@ dj_map_cpu,kind,nx,ny,confidence,a2l_name,description_de
 0x8E7B4E,1D,2,,unique,InjCrv_facPoI2LmbdWgh_CUR,Kennlinie für Interpolation Lambda-Sollwert Nacheinspritzung
 0x8E7B58,1D,8,,amb6,InjCrv_qPoI2LmbdRgn1Off_CUR,Ausschaltschwelle 1 für Lambda-Regelung Nacheinspritzung
 0x8E7C24,1D,2,,amb2,InjCrv_qPoI2LmbdRgn4Off_CUR,Ausschaltschwelle 4 für Lambda-Regelung Nacheinspritzung
+0x8E8572,1D,3,,unique,InjUn_facqRedovn_CUR,Kennlinie für die drehzahlabhängige Reduzierung der Einspritzmenge im Notfahren
 0x8E874E,1D,6,,unique,InjVlv_numMI1_CUR,Kurve zur Auswahl der Foerderdauerkennfelder fuer Haupteinspritzung
 0x8E9358,1D,2,,unique,InjVlv_numPiI1_CUR,Pumpenkennfeldauswahlkennlinie Voreinspritzung
 0x8E954A,1D,2,,unique,InjVlv_numPoI2_CUR,Kennfeld- Auswahlkennlinie für Nacheinspritzung
